@@ -1,2 +1,362 @@
-// MOVED TO: ./Dholasan-Community-Website-2/data/content.ts
-export {};
+import {
+  NewsArticle,
+  Event,
+  GalleryImage,
+  Business,
+  CommunityNotice,
+  EmergencyContact,
+  VillageLandmark,
+  DevelopmentProject,
+} from '../types';
+
+export const newsArticles: NewsArticle[] = [
+  {
+    id: 1,
+    title: { en: 'Annual Village Fair Announced', gu: 'વાર્ષિક ગામ મેળાની જાહેરાત' },
+    summary: { en: 'The much-awaited annual village fair will be held in the last week of December.', gu: 'બહુપ્રતિક્ષિત વાર્ષિક ગામ મેળો ડિસેમ્બરના છેલ્લા અઠવાડિયામાં યોજાશે.' },
+    date: '2025-12-01',
+  },
+  {
+    id: 2,
+    title: { en: 'New Health Clinic Opens', gu: 'નવું આરોગ્ય ક્લિનિક ખુલ્યું' },
+    summary: { en: 'A new primary health clinic has been inaugurated near the Gram Panchayat office.', gu: 'ગ્રામ પંચાયત કચેરી પાસે નવા પ્રાથમિક આરોગ્ય ક્લિનિકનું ઉદ્ઘાટન કરવામાં આવ્યું છે.' },
+    date: '2025-11-25',
+  },
+  {
+    id: 3,
+    title: { en: 'Local Student Wins State Award', gu: 'સ્થાનિક વિદ્યાર્થીએ રાજ્ય કક્ષાનો એવોર્ડ જીત્યો' },
+    summary: { en: 'Riya Patel from Dholasan has won the state-level science competition with top honors.', gu: 'ધોળાસણની રિયા પટેલે રાજ્ય કક્ષાની વિજ્ઞાન સ્પર્ધામાં ઉત્કૃષ્ટ પ્રદર્શન સાથે પ્રથમ સ્થાન મેળવ્યું છે.' },
+    date: '2025-11-20',
+  },
+];
+
+export const events: Event[] = [
+  {
+    id: 1,
+    name: { en: 'Navratri Mahotsav & Garba Night', gu: 'નવરાત્રી મહોત્સવ અને રાસ-ગરબા' },
+    date: { en: 'October 15, 2025', gu: 'ઓક્ટોબર ૧૫, ૨૦૨૫' },
+    time: '8:00 PM',
+    location: { en: 'Village Main Chowk', gu: 'ગામનો મુખ્ય ચોક' },
+    description: { en: 'Join the entire village community for traditional Gujarati Garba and auspicious Aarti.', gu: 'પરંપરાગત રાસ ગરબા અને મહા આરતી માટે સમગ્ર ગામ પરિવારો સાથે ઉપસ્થિત રહો.' },
+  },
+  {
+    id: 2,
+    name: { en: 'Diwali Sneh Milan & Fireworks', gu: 'દિવાળી સ્નેહ મિલન અને દીપોત્સવ' },
+    date: { en: 'November 1, 2025', gu: 'નવેમ્બર ૧, ૨૦૨૫' },
+    time: '6:30 PM',
+    location: { en: 'Panchayat Bhavan Ground', gu: 'પંચાયત ભવન પરિસર' },
+    description: { en: 'Annual New Year Sneh Milan gathering with sweets, greetings, and community fireworks.', gu: 'નૂતન વર્ષાભિનંદન અને સ્નેહ મિલન સમારોહ, દીપ પ્રાગટ્ય અને આતશબાજી.' },
+  },
+  {
+    id: 3,
+    name: { en: 'Free Eye & Dental Medical Camp', gu: 'વિનામૂલ્યે નેત્ર અને દંત નિદાન કેમ્પ' },
+    date: { en: 'December 10, 2025', gu: 'ડિસેમ્બર ૧૦, ૨૦૨૫' },
+    time: '9:00 AM - 2:00 PM',
+    location: { en: 'Primary Health Centre', gu: 'પ્રાથમિક આરોગ્ય કેન્દ્ર' },
+    description: { en: 'Specialist doctors from Mahesana offering free checkups, spectacles, and medicines.', gu: 'મહેસાણાના નિષ્ણાત તબીબો દ્વારા આંખ અને દાંતની મફત તપાસ અને દવા વિતરણ.' },
+  },
+  {
+    id: 4,
+    name: { en: 'Annual Tree Plantation Drive 2024', gu: 'વાર્ષિક વૃક્ષારોપણ અભિયાન ૨૦૨૪' },
+    date: { en: 'July 15, 2024', gu: 'જુલાઈ ૧૫, ૨૦૨૪' },
+    time: '8:00 AM',
+    location: { en: 'Village Lake & Border Roads', gu: 'ગામનું તળાવ અને રસ્તાઓ' },
+    description: { en: 'Over 500 saplings planted across the village perimeter by enthusiastic youth and elders.', gu: 'યુવાનો અને વડીલોના સહયોગથી ગામની સીમમાં ૫૦૦ થી વધુ વૃક્ષોનું રોપણ કરવામાં આવ્યું.' },
+    isPast: true,
+  },
+];
+
+export const galleryImages: GalleryImage[] = [
+  { id: 1, src: 'https://images.unsplash.com/photo-1599827556779-d5c21b3fa1e4?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Navratri Traditional Garba', gu: 'નવરાત્રી પરંપરાગત ગરબા' }, category: 'Festivals' },
+  { id: 2, src: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Lush Green Agricultural Fields of Dholasan', gu: 'ધોળાસણના લીલાછમ ખેતરો' }, category: 'Scenery' },
+  { id: 3, src: 'https://images.unsplash.com/photo-1609137144820-22d7a642e5fe?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Village Temple Aarti & Festivities', gu: 'ગામના મંદિરની આરતી અને પૂજા' }, category: 'Festivals' },
+  { id: 4, src: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Village Street Life at Sunset', gu: 'સૂર્યાસ્ત સમયે ગામનું દ્રશ્ય' }, category: 'Daily Life' },
+  { id: 5, src: 'https://images.unsplash.com/photo-1524813686514-a57563d77d61?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Primary School Children Learning', gu: 'પ્રાથમિક શાળાના બાળકોનો અભ્યાસ' }, category: 'Daily Life' },
+  { id: 6, src: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Peaceful Village Lake at Dawn', gu: 'સવારના સમયે શાંત ગામનું તળાવ' }, category: 'Scenery' },
+  { id: 7, src: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Holi Colors Celebration in Village', gu: 'ગામમાં હોળી-ધૂળેટી પર્વની હર્ષોલ્લાસ ઉજવણી' }, category: 'Festivals' },
+  { id: 8, src: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&auto=format&fit=crop&q=80', alt: { en: 'Fresh Produce & Village Market', gu: 'તાજા શાકભાજી અને સ્થાનિક હાટ' }, category: 'Daily Life' },
+];
+
+export const businesses: Business[] = [
+  { id: 1, name: { en: 'Patel Kirana & General Store', gu: 'પટેલ કિરાણા અને જનરલ સ્ટોર' }, category: { en: 'Grocery', gu: 'કરિયાણું' }, contactPerson: 'Ramesh Patel', contactNumber: '+91 98765 43210' },
+  { id: 2, name: { en: 'Shree Ram Krushi Seva Kendra', gu: 'શ્રી રામ કૃષિ સેવા કેન્દ્ર' }, category: { en: 'Agriculture & Seeds', gu: 'બિયારણ અને ખેતી સાધન' }, contactPerson: 'Suresh Desai', contactNumber: '+91 91234 56789' },
+  { id: 3, name: { en: 'Modern Tractor & Motor Repairing', gu: 'મોડર્ન ટ્રેક્ટર અને મોટર રીપેરીંગ' }, category: { en: 'Mechanical & Repair', gu: 'મિકેનિકલ અને રીપેર' }, contactPerson: 'Vipul Mistry', contactNumber: '+91 87654 32109' },
+  { id: 4, name: { en: 'Dholasan Dudh Utpadak Sahakari Mandli', gu: 'ધોળાસણ દૂધ ઉત્પાદક સહકારી મંડળી (અમૂલ ડેરી)' }, category: { en: 'Dairy Cooperative', gu: 'ડેરી સહકારી' }, contactPerson: 'Govindbhai Patel', contactNumber: '+91 76543 21098' },
+  { id: 5, name: { en: 'Jai Ambe Tailors & Cloth Store', gu: 'જય અંબે ટેલર્સ અને કાપડ ભંડાર' }, category: { en: 'Clothing & Tailoring', gu: 'ટેલરિંગ અને કાપડ' }, contactPerson: 'Bharatbhai Prajapati', contactNumber: '+91 94280 11223' },
+];
+
+export const communityNotices: CommunityNotice[] = [
+  {
+    id: 'n-1',
+    title: { en: 'Special Gram Sabha Meeting on Water Conservation', gu: 'જળ સંરક્ષણ અને વિકાસ કામો અંગે ખાસ ગ્રામસભા' },
+    content: {
+      en: 'A special Gram Sabha meeting is scheduled this Sunday at 10:00 AM in the Panchayat Hall to discuss rainwater harvesting and canal maintenance. All villagers are cordially requested to attend and contribute ideas.',
+      gu: 'આ રવિવારે સવારે ૧૦:૦૦ કલાકે પંચાયત હોલમાં જળ સંરક્ષણ અને વરસાદી પાણી સંગ્રહ અંગે ખાસ ગ્રામસભા યોજાશે. તમામ ગ્રામજનોને ઉપસ્થિત રહેવા નમ્ર વિનંતી.',
+    },
+    category: 'announcement',
+    author: 'Gram Panchayat Dholasan',
+    contact: '+91 98250 12345',
+    date: '2025-08-18',
+    pinned: true,
+    likes: 24,
+    approved: true,
+    createdAt: Date.now() - 86400000 * 2,
+  },
+  {
+    id: 'n-2',
+    title: { en: 'Hearty Congratulations to Dr. Jayesh Patel for UPSC Success', gu: 'ધોળાસણના સુપુત્ર ડૉ. જયેશ પટેલને GPSC/UPSC સફળતા બદલ ખૂબ ખૂબ અભિનંદન' },
+    content: {
+      en: 'Proud moment for Dholasan village! Jayeshbhai Patel has achieved top ranking in state civil services. The youth board congratulates the family.',
+      gu: 'આપણા ધોળાસણ ગામ માટે ગૌરવપૂર્ણ ક્ષણ! જયેશભાઈ પટેલે રાજ્ય સ્તરે ઉત્કૃષ્ટ સફળતા મેળવી ગામનું નામ રોશન કર્યું છે. સમગ્ર ગામ તરફથી ખૂબ ખૂબ અભિનંદન!',
+    },
+    category: 'achievement',
+    author: 'Dholasan Yuvak Mandal',
+    contact: '',
+    date: '2025-08-16',
+    pinned: false,
+    likes: 48,
+    approved: true,
+    createdAt: Date.now() - 86400000 * 4,
+  },
+  {
+    id: 'n-3',
+    title: { en: 'Blood Donation & Free Medical Health Checkup Camp', gu: 'મહારક્તદાન શિબિર અને સર્વરોગ નિદાન કેમ્પનું આયોજન' },
+    content: {
+      en: 'Rotary Club and Dholasan Trust will organize a blood donation and cardiac health screening camp on next Sunday at the School campus from 8 AM.',
+      gu: 'શાળાના પરિસરમાં આવતા રવિવારે સવારે ૮:૦૦ વાગ્યાથી વિશાળ રક્તદાન શિબિર અને હૃદયરોગ તપાસ કેમ્પ યોજાશે. યુવાનોને રક્તદાન કરવા અનુરોધ છે.',
+    },
+    category: 'emergency',
+    author: 'Shree Dholasan Seva Trust',
+    contact: '+91 98980 54321',
+    date: '2025-08-14',
+    pinned: false,
+    likes: 19,
+    approved: true,
+    createdAt: Date.now() - 86400000 * 6,
+  },
+  {
+    id: 'n-4',
+    title: { en: 'Cricket Tournament Registration Open', gu: 'ધોળાસણ પ્રીમિયર લીગ (DPL) ક્રિકેટ ટૂર્નામેન્ટ રજીસ્ટ્રેશન શરૂ' },
+    content: {
+      en: 'Village annual night cricket tournament registrations are open for local youth teams. Contact tournament committee before month end.',
+      gu: 'ગામની વાર્ષિક નાઇટ ક્રિકેટ ટૂર્નામેન્ટ માટે ટીમ રજીસ્ટ્રેશન શરૂ થઈ ગયું છે. રસ ધરાવતા યુવાનો તાત્કાલિક સમિતિનો સંપર્ક કરે.',
+    },
+    category: 'general',
+    author: 'Sports Committee Dholasan',
+    contact: '+91 97123 45678',
+    date: '2025-08-10',
+    pinned: false,
+    likes: 31,
+    approved: true,
+    createdAt: Date.now() - 86400000 * 10,
+  },
+];
+
+export const emergencyContacts: EmergencyContact[] = [
+  {
+    id: 'em-1',
+    name: { en: 'Gram Panchayat Sarpanch', gu: 'ગ્રામ પંચાયત સરપંચશ્રી' },
+    role: { en: 'Village Administration & Civic Issues', gu: 'ગામ વહીવટ અને નાગરિક પ્રશ્નો' },
+    phone: '+91 98250 12345',
+    whatsapp: '+919825012345',
+    category: 'civic',
+    availableHours: { en: '8:00 AM - 8:00 PM', gu: 'સવારે ૮:૦૦ થી રાત્રે ૮:૦૦' },
+    address: { en: 'Panchayat Bhavan, Main Road, Dholasan', gu: 'પંચાયત ભવન, મુખ્ય માર્ગ, ધોળાસણ' },
+  },
+  {
+    id: 'em-2',
+    name: { en: 'Talati-cum-Mantri', gu: 'તલાટી-કમ-મંત્રીશ્રી' },
+    role: { en: 'Government Certificates, Revenue & Land Records', gu: 'સરકારી દાખલા, આવક/જમીન નોંધણી' },
+    phone: '+91 94260 67890',
+    whatsapp: '+919426067890',
+    category: 'civic',
+    availableHours: { en: 'Mon-Fri 10:30 AM - 5:30 PM', gu: 'સોમ-શુક્ર ૧૦:૩૦ થી ૫:૩૦' },
+    address: { en: 'Talati Office, Panchayat Bhavan', gu: 'તલાટી કચેરી, પંચાયત ભવન' },
+  },
+  {
+    id: 'em-3',
+    name: { en: '108 Ambulance Emergency', gu: '૧૦૮ ઇમરજન્સી એમ્બ્યુલન્સ' },
+    role: { en: 'Urgent Medical Assistance & Hospital Transfer', gu: 'તાત્કાલિક તબીબી સારવાર અને હોસ્પિટલ સેવા' },
+    phone: '108',
+    category: 'medical',
+    availableHours: { en: '24/7 Available', gu: '૨૪ કલાક ઉપલબ્ધ' },
+    address: { en: 'Government Emergency Service', gu: 'સરકારી ૧૦૮ સેવા' },
+  },
+  {
+    id: 'em-4',
+    name: { en: 'Primary Health Centre (PHC Doctor)', gu: 'પ્રાથમિક આરોગ્ય કેન્દ્ર (તબીબ)' },
+    role: { en: 'General OPD, Vaccinations & First Aid', gu: 'સામાન્ય સારવાર, રસીકરણ અને પ્રાથમિક ઉપચાર' },
+    phone: '+91 2762 254100',
+    category: 'medical',
+    availableHours: { en: '9:00 AM - 5:00 PM (Emergency 24x7)', gu: 'સવારે ૯:૦૦ થી સાંજે ૫:૦૦ (ઇમરજન્સી ૨૪ કલાક)' },
+    address: { en: 'PHC Building, North Gate, Dholasan', gu: 'પી.એચ.સી. ભવન, ઉત્તર દરવાજા પાસે' },
+  },
+  {
+    id: 'em-5',
+    name: { en: 'Electricity Board (UGVCL Helpline)', gu: 'વીજળી વિભાગ (યુ.જી.વી.સી.એલ. લાઇનમેન)' },
+    role: { en: 'Power Outages & Transformer Issues', gu: 'વીજળી પુરવઠો, ફોલ્ટ અને ટ્રાન્સફોર્મર સમારકામ' },
+    phone: '+91 99099 12345',
+    whatsapp: '+919909912345',
+    category: 'utility',
+    availableHours: { en: '24/7 Helpline', gu: '૨૪ કલાક ફરિયાદ સેવા' },
+    address: { en: 'UGVCL Substation, Dholasan Road', gu: 'યુજીવીસીએલ સબસ્ટેશન, ધોળાસણ રોડ' },
+  },
+  {
+    id: 'em-6',
+    name: { en: 'Village Water Supply Operator', gu: 'ગામ પાણી પુરવઠા ઓપરેટર' },
+    role: { en: 'Borewell & Drinking Water Pipeline Repair', gu: 'બોરવેલ અને પીવાના પાણીની લાઇન' },
+    phone: '+91 97230 45678',
+    category: 'utility',
+    availableHours: { en: '6:00 AM - 7:00 PM', gu: 'સવારે ૬:૦૦ થી સાંજે ૭:૦૦' },
+    address: { en: 'Overhead Water Tank, Dholasan', gu: 'પાણીની ટાંકી પાસે, ધોળાસણ' },
+  },
+  {
+    id: 'em-7',
+    name: { en: 'Nearest Police Station & PCR (100 / 112)', gu: 'નજીકનું પોલીસ સ્ટેશન અને પી.સી.આર.' },
+    role: { en: 'Law, Order & Village Security', gu: 'કાયદો અને વ્યવસ્થા, ગામ સુરક્ષા' },
+    phone: '112',
+    category: 'police',
+    availableHours: { en: '24/7 Available', gu: '૨૪ કલાક ઉપલબ્ધ' },
+    address: { en: 'Mahesana Rural Police Station', gu: 'મહેસાણા ગ્રામ્ય પોલીસ સ્ટેશન' },
+  },
+  {
+    id: 'em-8',
+    name: { en: 'Veterinary Doctor (Pashu Chikitsalay)', gu: 'પશુ ચિકિત્સક (પશુ દવાખાનું / ગૌશાળા)', },
+    role: { en: 'Cattle & Livestock Healthcare', gu: 'ગાય, ભેંસ અને પશુધનની સારવાર' },
+    phone: '+91 94270 88990',
+    category: 'veterinary',
+    availableHours: { en: '8:00 AM - 2:00 PM', gu: 'સવારે ૮:૦૦ થી બપોરે ૨:૦૦' },
+    address: { en: 'Near Village Gaushala, Dholasan', gu: 'ગૌશાળા પરિસર, ધોળાસણ' },
+  },
+];
+
+export const villageLandmarks: VillageLandmark[] = [
+  {
+    id: 'lm-1',
+    name: { en: 'Shree Nilkanth Mahadev Temple', gu: 'શ્રી નીલકંઠ મહાદેવ મંદિર' },
+    category: { en: 'Sacred Heritage & Temple', gu: 'પવિત્ર તીર્થ અને મંદિર' },
+    description: {
+      en: 'The ancient Shiva temple located near the heart of Dholasan. The temple is the spiritual core of the village where annual Shravan Maas and Maha Shivratri festivals are celebrated with high devotion.',
+      gu: 'ધોળાસણના કેન્દ્રમાં આવેલું પૌરાણિક શિવ મંદિર. શ્રાવણ માસ અને મહાશિવરાત્રી દરમિયાન અહીં વિશાળ મેળો અને વિશેષ ભક્તિમય કાર્યક્રમો યોજાય છે.',
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1609137144820-22d7a642e5fe?w=800&auto=format&fit=crop&q=80',
+    locationQuery: 'Dholasan, Gujarat 382732',
+    timing: { en: '5:30 AM - 9:00 PM', gu: 'સવારે ૫:૩૦ થી રાત્રે ૯:૦૦' },
+  },
+  {
+    id: 'lm-2',
+    name: { en: 'Dholasan Primary & High School Campus', gu: 'ધોળાસણ પ્રાથમિક અને માધ્યમિક શાળા સંકુલ' },
+    category: { en: 'Education Hub', gu: 'શિક્ષણ કેન્દ્ર' },
+    description: {
+      en: 'Modern school campus nurturing the youth of Dholasan with computer lab, smart classes, spacious sports playground, and dedicated teachers.',
+      gu: 'આધુનિક કમ્પ્યુટર લેબ, સ્માર્ટ ક્લાસરૂમ અને વિશાળ રમતગમત મેદાન ધરાવતી શાળા જે ગામના બાળકોને ગુણવત્તાયુક્ત શિક્ષણ પૂરું પાડે છે.',
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&auto=format&fit=crop&q=80',
+    locationQuery: 'Dholasan School, Gujarat 382732',
+    timing: { en: 'Mon-Sat 8:00 AM - 5:00 PM', gu: 'સોમ-શનિ સવારે ૮:૦૦ થી સાંજે ૫:૦૦' },
+  },
+  {
+    id: 'lm-3',
+    name: { en: 'Gram Panchayat & Community Bhavan', gu: 'ગ્રામ પંચાયત અને સામુદાયિક ભવન' },
+    category: { en: 'Civic & Administration', gu: 'વહીવટી અને સામુદાયિક કેન્દ્ર' },
+    description: {
+      en: 'The administrative heart of Dholasan equipped with digital village services (e-Gram), citizen service center, and large meeting hall for community gatherings.',
+      gu: 'ડિજિટલ સેવાઓ (ઈ-ગ્રામ) અને નાગરિક સુવિધાઓથી સજ્જ પંચાયત ભવન, જ્યાં ગામસભા અને મહત્વના સામાજિક નિર્ણયો લેવાય છે.',
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80',
+    locationQuery: 'Gram Panchayat Dholasan',
+    timing: { en: '10:00 AM - 6:00 PM', gu: 'સવારે ૧૦:૦૦ થી સાંજે ૬:૦૦' },
+  },
+  {
+    id: 'lm-4',
+    name: { en: 'Dholasan Gaushala & Animal Care Trust', gu: 'ધોળાસણ ગૌશાળા અને પશુ સેવા ટ્રસ્ટ' },
+    category: { en: 'Animal Welfare & Care', gu: 'ગૌ સેવા અને પશુ કલ્યાણ' },
+    description: {
+      en: 'A sanctuary dedicated to the shelter, feed, and healthcare of cows and calves, maintained through loving donations of the villagers and NRIs.',
+      gu: 'સેંકડો ગૌવંશ માટે આશ્રય, લીલો ઘાસચારો અને તબીબી સારવાર પૂરી પાડતી સ્વચ્છ અને સુવ્યવસ્થિત ગૌશાળા.',
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=800&auto=format&fit=crop&q=80',
+    locationQuery: 'Dholasan Gaushala',
+    timing: { en: '6:00 AM - 7:00 PM', gu: 'સવારે ૬:૦૦ થી સાંજે ૭:૦૦' },
+  },
+  {
+    id: 'lm-5',
+    name: { en: 'Village Lake & Sunset Promenade (Talav)', gu: 'ગામનું ઐતિહાસિક તળાવ અને કિનારો' },
+    category: { en: 'Nature & Scenery', gu: 'કુદરતી સૌંદર્ય' },
+    description: {
+      en: 'The serene village lake surrounded by neem and banyan trees, serving as a water catchment area and popular walking spot for elders in the evening.',
+      gu: 'લીમડા અને વડલાના શીતળ છાંયડાથી ઘેરાયેલું ગામનું રમણીય તળાવ, જ્યાં સાંજ સમયે પક્ષીઓનો કલરવ અને શાંતિ અનુભવાય છે.',
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&auto=format&fit=crop&q=80',
+    locationQuery: 'Dholasan Lake, Gujarat',
+    timing: { en: 'Open All Day', gu: 'આખો દિવસ ખુલ્લું' },
+  },
+];
+
+export const developmentProjects: DevelopmentProject[] = [
+  {
+    id: 'proj-1',
+    title: { en: 'Solar Street Lights Project for All Village Roads', gu: 'સમગ્ર ગામમાં સોલાર સ્ટ્રીટ લાઇટ યોજના' },
+    description: {
+      en: 'Installing 75 eco-friendly solar-powered LED street lights along all internal village lanes and main entrance road to ensure bright, safe nights and clean energy.',
+      gu: 'ગામના તમામ આંતરિક માર્ગો અને પ્રવેશ દ્વાર પર ૭૫ સોલાર સ્ટ્રીટ લાઇટો લગાવી રાત્રે ઉત્તમ પ્રકાશ અને સ્વચ્છ ઊર્જા ઉપલબ્ધ કરાવવાનો પ્રોજેક્ટ.',
+    },
+    category: { en: 'Clean Energy & Infrastructure', gu: 'સ્વચ્છ ઊર્જા અને માળખાકીય સુવિધા' },
+    targetAmount: 350000,
+    raisedAmount: 290000,
+    status: 'ongoing',
+    imageUrl: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&auto=format&fit=crop&q=80',
+    donors: [
+      { id: 'd1', name: 'Shree Kantilal Patel (USA)', amount: 100000, location: 'Chicago, USA', message: 'Proud to support our village development' },
+      { id: 'd2', name: 'Dholasan Yuvak Mandal', amount: 50000, location: 'Dholasan', message: 'For a brighter tomorrow' },
+      { id: 'd3', name: 'Rameshbhai J. Patel', amount: 40000, location: 'Ahmedabad' },
+      { id: 'd4', name: 'Pravinbhai Desai (UK)', amount: 100000, location: 'London, UK' },
+    ],
+    upiId: 'dholasantrust@sbi',
+    bankDetails: {
+      en: 'State Bank of India, Dholasan Branch | A/C: 38472910482 | IFSC: SBIN0001234',
+      gu: 'સ્ટેટ બેંક ઓફ ઇન્ડિયા, ધોળાસણ શાખા | ખાતા નં: 38472910482 | IFSC: SBIN0001234',
+    },
+  },
+  {
+    id: 'proj-2',
+    title: { en: 'Digital Smart Classroom & Science Lab in High School', gu: 'હાઈસ્કૂલમાં ડિજિટલ સ્માર્ટ ક્લાસરૂમ અને સાયન્સ લેબ' },
+    description: {
+      en: 'Equipping village children with interactive smart boards, 15 desktop computers, and physics/chemistry laboratory instruments.',
+      gu: 'ગામના વિદ્યાર્થીઓ માટે ૧૫ કમ્પ્યુટર્સ, સ્માર્ટ પ્રોજેક્ટર બોર્ડ અને વિજ્ઞાન પ્રયોગશાળાના સાધનોની ભેટ.',
+    },
+    category: { en: 'Education & Youth', gu: 'શિક્ષણ અને યુવા ઉત્કર્ષ' },
+    targetAmount: 500000,
+    raisedAmount: 500000,
+    status: 'completed',
+    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',
+    donors: [
+      { id: 'd5', name: 'Late Somabhai Patel Memorial Trust', amount: 250000, location: 'Dholasan' },
+      { id: 'd6', name: 'Dholasan NRI Association (USA)', amount: 250000, location: 'New Jersey' },
+    ],
+    upiId: 'dholasanschool@sbi',
+    bankDetails: {
+      en: 'State Bank of India | Dholasan School Vikas Fund | A/C: 10293847561 | IFSC: SBIN0001234',
+      gu: 'સ્ટેટ બેંક ઓફ ઇન્ડિયા | શાળા વિકાસ ફંડ | ખાતા નં: 10293847561 | IFSC: SBIN0001234',
+    },
+  },
+  {
+    id: 'proj-3',
+    title: { en: 'Village Lake Desilting & Tree Green Belt Phase 2', gu: 'ગામ તળાવ ઊંડું કરવું અને ફરતે વૃક્ષ ઉછેર ફેઝ-૨' },
+    description: {
+      en: 'Deepening the lake bed before next monsoon for 40% higher water storage capacity and planting 1,000 shaded trees with drip irrigation.',
+      gu: 'ચોમાસા પહેલા તળાવ ઊંડું કરી જળસંચય ક્ષમતા વધારવી તેમજ કિનારે ૧,૦૦૦ છાંયડાવાળા વૃક્ષોનું વાવેતર કરવું.',
+    },
+    category: { en: 'Water Conservation & Environment', gu: 'જળસંચય અને પર્યાવરણ' },
+    targetAmount: 400000,
+    raisedAmount: 180000,
+    status: 'ongoing',
+    imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&auto=format&fit=crop&q=80',
+    donors: [
+      { id: 'd7', name: 'Shree Patel Parivar', amount: 100000, location: 'Surat' },
+      { id: 'd8', name: 'Mukeshbhai Desai', amount: 50000, location: 'Dholasan' },
+      { id: 'd9', name: 'Well-wishers of Dholasan', amount: 30000, location: 'Various' },
+    ],
+    upiId: 'dholasantrust@sbi',
+  },
+];

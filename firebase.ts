@@ -1,21 +1,19 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getFirestore, Firestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDP075M7rdzaMbA-m3C_CbPDuhAxbZ_FJI",
-  authDomain: "dholasan-64e52.firebaseapp.com",
-  projectId: "dholasan-64e52",
-  storageBucket: "dholasan-64e52.firebasestorage.app",
-  messagingSenderId: "537515403763",
-  appId: "1:537515403763:web:fde3cb81413d1426874a86",
-  measurementId: "G-CF4BZV3SZK"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDP075M7rdzaMbA-m3C_CbPDuhAxbZ_FJI",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "dholasan-64e52.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "dholasan-64e52",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "537515403763",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:537515403763:web:fde3cb81413d1426874a86",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-CF4BZV3SZK"
 };
 
-// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// Safe Analytics initialization (prevents crashing when analytics is unsupported)
 export let analytics: any = null;
 if (typeof window !== 'undefined') {
   isSupported().then((supported) => {
@@ -29,13 +27,11 @@ if (typeof window !== 'undefined') {
   }).catch(() => {});
 }
 
-// Safe Firestore initialization
-let dbInstance: Firestore | null = null;
-try {
-  dbInstance = getFirestore(app);
-} catch (e) {
-  console.warn("Firestore initialization skipped:", e);
+export const db = getFirestore(app);
+
+export const auth = getAuth(app);
+if (typeof window !== 'undefined') {
+  setPersistence(auth, browserLocalPersistence).catch(() => {});
 }
 
-export const db = dbInstance;
 export default app;
