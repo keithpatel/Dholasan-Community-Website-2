@@ -6,6 +6,10 @@ import { ContentProvider, useContent } from './context/ContentContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LiveEditProvider, useLiveEdit } from './context/LiveEditContext';
 
+// Visual Editor
+import LiveEditToolbar from './components/admin/visual-editor/LiveEditToolbar';
+import QuickEditDrawer from './components/admin/visual-editor/QuickEditDrawer';
+
 // Public Components & Pages
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -16,8 +20,6 @@ import EventsPage from './pages/EventsPage';
 import GalleryPage from './pages/GalleryPage';
 import BusinessesPage from './pages/BusinessesPage';
 import ContactPage from './pages/ContactPage';
-import LiveEditToolbar from './components/admin/visual-editor/LiveEditToolbar';
-import QuickEditDrawer from './components/admin/visual-editor/QuickEditDrawer';
 
 // Admin Components & Pages
 import AdminLayout from './components/admin/AdminLayout';
@@ -38,7 +40,6 @@ import ManageMessages from './pages/admin/ManageMessages';
 import ManagePageBuilder from './pages/admin/ManagePageBuilder';
 import SiteSettings from './pages/admin/SiteSettings';
 
-
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   if (loading) {
@@ -56,35 +57,30 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { themeTriplets } = useContent();
-  const { viewport, isLiveEditMode } = useLiveEdit();
+  const { viewport } = useLiveEdit();
 
-  // Responsive device simulator container classes
-  let frameClass = 'w-full min-h-screen';
-  let outerWrapperClass = 'w-full min-h-screen';
-
-  if (isLiveEditMode && viewport === 'mobile') {
-    outerWrapperClass = 'min-h-screen bg-slate-900/90 py-16 px-4 flex justify-center items-start overflow-x-auto';
-    frameClass = 'w-full max-w-[390px] bg-white dark:bg-slate-950 rounded-[3rem] shadow-2xl border-[10px] border-slate-800 overflow-hidden ring-4 ring-slate-700/50 min-h-[844px] transition-all duration-300';
-  } else if (isLiveEditMode && viewport === 'tablet') {
-    outerWrapperClass = 'min-h-screen bg-slate-900/90 py-16 px-4 flex justify-center items-start overflow-x-auto';
-    frameClass = 'w-full max-w-[768px] bg-white dark:bg-slate-950 rounded-[2.5rem] shadow-2xl border-[10px] border-slate-800 overflow-hidden ring-4 ring-slate-700/50 min-h-[1024px] transition-all duration-300';
-  }
+  const viewportClass =
+    viewport === 'mobile'
+      ? 'max-w-[390px] mx-auto border-x border-slate-300 dark:border-slate-800 shadow-2xl min-h-screen'
+      : viewport === 'tablet'
+      ? 'max-w-[768px] mx-auto border-x border-slate-300 dark:border-slate-800 shadow-2xl min-h-screen'
+      : 'w-full';
 
   return (
-    <div className={outerWrapperClass}>
+    <div
+      className="flex flex-col min-h-screen bg-gray-50 text-gray-800 dark:bg-black dark:text-gray-200 transition-colors duration-300"
+      style={{
+        ['--brand-orange' as string]: themeTriplets.primary,
+        ['--brand-blue' as string]: themeTriplets.secondary,
+      }}
+    >
       <LiveEditToolbar />
-      <QuickEditDrawer />
-      <div
-        className={`flex flex-col ${frameClass} bg-gray-50 text-gray-800 dark:bg-black dark:text-gray-200 transition-all duration-300`}
-        style={{
-          ['--brand-orange' as string]: themeTriplets.primary,
-          ['--brand-blue' as string]: themeTriplets.secondary,
-        }}
-      >
+      <div className={`flex flex-col flex-grow ${viewportClass}`}>
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
       </div>
+      <QuickEditDrawer />
     </div>
   );
 };
