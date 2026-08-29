@@ -210,7 +210,6 @@ export const BlockStyleEditor: React.FC<{
   );
 };
 
-
 // --- Hero Editor ---
 export const HeroEditor: React.FC<EditorProps> = ({ props, onChange }) => {
   return (
@@ -763,41 +762,27 @@ export const CustomEmbedEditor: React.FC<EditorProps> = ({ props, onChange }) =>
   );
 };
 
-// --- Master Block Property Inspector ---
+// --- Master Block Property Inspector (auto-saves on change) ---
 export const BlockPropertyInspector: React.FC<{
   block: PageBlockConfig;
   onChange: (updatedBlock: PageBlockConfig) => void;
 }> = ({ block, onChange }) => {
-  const handlePropsChange = (newProps: any) => {
-    onChange({
-      ...block,
-      props: newProps,
-    });
-  };
-
-  const handleStyleChange = (newStyle: BlockStyleConfig) => {
-    onChange({
-      ...block,
-      style: newStyle,
-    });
-  };
-
+  const handlePropsChange = (newProps: any) => onChange({ ...block, props: newProps });
+  const handleStyleChange = (newStyle: BlockStyleConfig) => onChange({ ...block, style: newStyle });
   return (
-    <div className="space-y-6">
-      {/* Block Admin Name */}
+    <div className="space-y-4">
       <div>
-        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">
-          Block Label in Admin
+        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+          Block Label (Admin Only)
         </label>
         <input
           type="text"
           value={block.name || ''}
           onChange={(e) => onChange({ ...block, name: e.target.value })}
-          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-bold"
+          placeholder="Give this block a friendly name..."
+          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-semibold outline-none focus:ring-2 focus:ring-orange-500"
         />
       </div>
-
-      {/* Component Specific Form */}
       {block.type === 'hero' && <HeroEditor props={block.props} onChange={handlePropsChange} />}
       {block.type === 'quickLinks' && <QuickLinksEditor props={block.props} onChange={handlePropsChange} />}
       {block.type === 'stats' && <StatsEditor props={block.props} onChange={handlePropsChange} />}
@@ -811,9 +796,143 @@ export const BlockPropertyInspector: React.FC<{
         <FeedEditor props={block.props} onChange={handlePropsChange} />
       )}
       {block.type === 'customEmbed' && <CustomEmbedEditor props={block.props} onChange={handlePropsChange} />}
-
-      {/* Block Style & Layout Controls */}
       <BlockStyleEditor style={block.style} onChange={handleStyleChange} />
+    </div>
+  );
+};
+
+// --- Buffered Block Inspector with Apply Changes and collapsible sections ---
+export const BlockPropertyInspectorWithApply: React.FC<{
+  block: PageBlockConfig;
+  onChange: (updatedBlock: PageBlockConfig) => void;
+  onSaved?: () => void;
+}> = ({ block, onChange, onSaved }) => {
+  const [draft, setDraft] = React.useState<PageBlockConfig>(block);
+  const [isDirty, setIsDirty] = React.useState(false);
+  const [contentOpen, setContentOpen] = React.useState(true);
+  const [styleOpen, setStyleOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setDraft(block);
+    setIsDirty(false);
+  }, [block.id]);
+
+  const handleDraftChange = (updated: PageBlockConfig) => {
+    setDraft(updated);
+    setIsDirty(true);
+  };
+
+  const handleDraftPropsChange = (newProps: any) => {
+    handleDraftChange({ ...draft, props: newProps });
+  };
+
+  const handleDraftStyleChange = (newStyle: BlockStyleConfig) => {
+    handleDraftChange({ ...draft, style: newStyle });
+  };
+
+  const handleApply = () => {
+    onChange(draft);
+    setIsDirty(false);
+    onSaved?.();
+  };
+
+  const handleDiscard = () => {
+    setDraft(block);
+    setIsDirty(false);
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Block Admin Name */}
+      <div>
+        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+          Block Label (Admin Only)
+        </label>
+        <input
+          type="text"
+          value={draft.name || ''}
+          onChange={(e) => handleDraftChange({ ...draft, name: e.target.value })}
+          placeholder="Give this block a friendly name..."
+          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-semibold outline-none focus:ring-2 focus:ring-orange-500"
+        />
+      </div>
+
+      {/* Collapsible: Content Section */}
+      <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setContentOpen((o) => !o)}
+          className="w-full flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <span>📝</span> Content & Text
+          </span>
+          <span className={`text-slate-400 text-sm transition-transform duration-200 ${contentOpen ? 'rotate-180' : ''}`}>▼</span>
+        </button>
+        {contentOpen && (
+          <div className="p-4 space-y-4 border-t border-slate-100 dark:border-slate-800">
+            {draft.type === 'hero' && <HeroEditor props={draft.props} onChange={handleDraftPropsChange} />}
+            {draft.type === 'quickLinks' && <QuickLinksEditor props={draft.props} onChange={handleDraftPropsChange} />}
+            {draft.type === 'stats' && <StatsEditor props={draft.props} onChange={handleDraftPropsChange} />}
+            {draft.type === 'richText' && <RichTextEditor props={draft.props} onChange={handleDraftPropsChange} />}
+            {draft.type === 'banner' && <BannerEditor props={draft.props} onChange={handleDraftPropsChange} />}
+            {(draft.type === 'newsFeed' ||
+              draft.type === 'eventsFeed' ||
+              draft.type === 'noticesFeed' ||
+              draft.type === 'projectsFeed' ||
+              draft.type === 'galleryGrid') && (
+              <FeedEditor props={draft.props} onChange={handleDraftPropsChange} />
+            )}
+            {draft.type === 'customEmbed' && <CustomEmbedEditor props={draft.props} onChange={handleDraftPropsChange} />}
+            {draft.type === 'contactCard' && <p className="text-xs text-slate-400 italic">This block renders live data automatically from your site settings.</p>}
+          </div>
+        )}
+      </div>
+
+      {/* Collapsible: Style Section */}
+      <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setStyleOpen((o) => !o)}
+          className="w-full flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <span>🎨</span> Style & Appearance
+          </span>
+          <span className={`text-slate-400 text-sm transition-transform duration-200 ${styleOpen ? 'rotate-180' : ''}`}>▼</span>
+        </button>
+        {styleOpen && (
+          <div className="p-4 border-t border-slate-100 dark:border-slate-800">
+            <BlockStyleEditor style={draft.style} onChange={handleDraftStyleChange} />
+          </div>
+        )}
+      </div>
+
+      {/* Apply / Discard Buttons */}
+      <div className={`flex items-center gap-2 pt-2 transition-all ${isDirty ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
+        <button
+          type="button"
+          onClick={handleApply}
+          disabled={!isDirty}
+          className="flex-1 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-1.5"
+        >
+          <span>✓</span>
+          <span>Apply Changes</span>
+        </button>
+        <button
+          type="button"
+          onClick={handleDiscard}
+          disabled={!isDirty}
+          className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition-all"
+        >
+          Discard
+        </button>
+      </div>
+      {isDirty && (
+        <p className="text-[11px] text-amber-600 dark:text-amber-400 text-center font-medium">
+          ● You have unsaved changes — click Apply to save.
+        </p>
+      )}
     </div>
   );
 };

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useContent } from '../../context/ContentContext';
 import { PageBlockConfig } from '../../types';
 import AddBlockModal from '../../components/admin/blocks/AddBlockModal';
-import { BlockPropertyInspector } from '../../components/admin/blocks/BlockPropertyEditors';
+import { BlockPropertyInspectorWithApply } from '../../components/admin/blocks/BlockPropertyEditors';
 import PageBlockRenderer from '../../components/blocks/PageBlockRenderer';
 import { defaultPageLayouts } from '../../data/contentStore';
 
@@ -30,6 +30,22 @@ const BlockTypeIcons: Record<string, string> = {
   customEmbed: '🗺️',
 };
 
+const BlockTypeDescriptions: Record<string, string> = {
+  hero: 'Full-width hero banner with image & CTA buttons',
+  quickLinks: 'Grid of icon navigation shortcuts',
+  stats: 'Animated number statistics counters',
+  richText: 'Formatted text content with optional image',
+  banner: 'Coloured announcement strip with link',
+  features: 'Feature highlights in a grid layout',
+  newsFeed: 'Live feed of latest news articles',
+  eventsFeed: 'Live feed of upcoming events',
+  noticesFeed: 'Live community notice board feed',
+  projectsFeed: 'Live Vikas development projects feed',
+  galleryGrid: 'Photo gallery grid display',
+  contactCard: 'Contact info, map & helplines section',
+  customEmbed: 'Custom HTML / iFrame / YouTube embed',
+};
+
 type ViewportSize = 'desktop' | 'tablet' | 'mobile';
 
 export const ManagePageBuilder: React.FC = () => {
@@ -48,11 +64,13 @@ export const ManagePageBuilder: React.FC = () => {
   const [activePageId, setActivePageId] = useState<string>('home');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'editor' | 'canvas' | 'json'>('editor');
+  const [activeTab, setActiveTab] = useState<'editor' | 'canvas'>('editor');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [viewport, setViewport] = useState<ViewportSize>('desktop');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [jsonText, setJsonText] = useState('');
   const [jsonError, setJsonError] = useState<string | null>(null);
+  const inspectorRef = useRef<HTMLDivElement>(null);
 
   // Undo / Redo History Stack
   const [history, setHistory] = useState<Record<string, PageBlockConfig[][]>>({});
@@ -146,7 +164,7 @@ export const ManagePageBuilder: React.FC = () => {
   const handleOpenJson = () => {
     setJsonText(JSON.stringify(currentBlocks, null, 2));
     setJsonError(null);
-    setActiveTab('json');
+    setShowAdvanced(true);
   };
 
   const handleApplyJson = () => {
@@ -157,7 +175,7 @@ export const ManagePageBuilder: React.FC = () => {
       pushHistory(activePageId, parsed);
       setJsonError(null);
       showToast('Custom layout applied!');
-      setActiveTab('editor');
+      setShowAdvanced(false);
     } catch (e: any) {
       setJsonError(e.message || 'Invalid JSON syntax');
     }
@@ -181,10 +199,10 @@ export const ManagePageBuilder: React.FC = () => {
         </div>
       )}
 
-      {/* Top Action Bar (Minimalist) */}
+      {/* Top Action Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm font-bold">
+          <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg">
             🧱
           </div>
           <div>
@@ -192,7 +210,7 @@ export const ManagePageBuilder: React.FC = () => {
               Page Builder Studio
             </h1>
             <p className="text-xs text-slate-400">
-              {currentBlocks.length} active blocks on /{activePageId === 'home' ? '' : activePageId}
+              {currentBlocks.length} active block{currentBlocks.length !== 1 ? 's' : ''} on /{activePageId === 'home' ? '' : activePageId}
             </p>
           </div>
         </div>
@@ -232,7 +250,7 @@ export const ManagePageBuilder: React.FC = () => {
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Studio
+              ✏️ Studio
             </button>
             <button
               type="button"
@@ -243,20 +261,19 @@ export const ManagePageBuilder: React.FC = () => {
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Interactive Canvas
-            </button>
-            <button
-              type="button"
-              onClick={handleOpenJson}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                activeTab === 'json'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              JSON Schema
+              👁 Preview
             </button>
           </div>
+
+          {/* Advanced (JSON) Toggle */}
+          <button
+            type="button"
+            onClick={handleOpenJson}
+            className="px-2.5 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-1"
+            title="Advanced JSON Schema Editor"
+          >
+            ⚙️ Advanced
+          </button>
 
           <button
             type="button"
@@ -300,23 +317,71 @@ export const ManagePageBuilder: React.FC = () => {
         })}
       </div>
 
+      {/* Advanced JSON Panel (hidden by default) */}
+      {showAdvanced && (
+        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-amber-200 dark:border-amber-900/60 shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <span>⚙️</span> JSON Layout Schema
+                <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-[10px] font-black rounded-full uppercase tracking-wider">Advanced</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Directly export or import the raw layout config for {activePageId}. Be careful!
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleApplyJson}
+                className="px-4 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold rounded-xl"
+              >
+                Apply Schema
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(false)}
+                className="text-xs text-slate-400 hover:text-slate-600 font-semibold"
+              >
+                Close ✕
+              </button>
+            </div>
+          </div>
+
+          {jsonError && (
+            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 text-xs font-semibold border border-red-200 dark:border-red-900">
+              ⚠️ {jsonError}
+            </div>
+          )}
+
+          <textarea
+            rows={14}
+            value={jsonText}
+            onChange={(e) => setJsonText(e.target.value)}
+            className="w-full p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 font-mono text-xs text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-orange-500"
+          />
+        </div>
+      )}
+
       {/* --- TAB 1: STUDIO (List + Inspector) --- */}
       {activeTab === 'editor' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           {/* Left Column: Blocks Manager */}
           <div className="lg:col-span-5 space-y-2.5">
             <div className="flex items-center justify-between px-1 text-xs text-slate-400 font-medium">
-              <span>Section Hierarchy</span>
-              <span>Reorder with ↑↓</span>
+              <span>Section Hierarchy ({currentBlocks.length} blocks)</span>
+              <span className="text-[11px]">Click a block to edit ↓</span>
             </div>
 
             {currentBlocks.length === 0 ? (
               <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 space-y-2">
-                <p className="text-xs text-slate-500 font-medium">No sections added yet.</p>
+                <div className="text-4xl mb-2">🧱</div>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No sections yet</p>
+                <p className="text-xs text-slate-500">Add your first content block to start building this page.</p>
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(true)}
-                  className="px-3 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold rounded-xl"
+                  className="mt-2 px-4 py-2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold rounded-xl"
                 >
                   + Add First Section
                 </button>
@@ -325,86 +390,96 @@ export const ManagePageBuilder: React.FC = () => {
               currentBlocks.map((block, index) => {
                 const isSelected = selectedBlockId === block.id;
                 const icon = BlockTypeIcons[block.type] || '🧩';
+                const desc = BlockTypeDescriptions[block.type] || '';
 
                 return (
                   <div
                     key={block.id}
-                    className={`group p-3 rounded-xl border transition-all ${
+                    className={`group rounded-xl border transition-all ${
                       isSelected
-                        ? 'bg-orange-50/40 dark:bg-orange-950/20 border-orange-500 dark:border-orange-500 shadow-xs'
+                        ? 'bg-orange-50/40 dark:bg-orange-950/20 border-orange-500 dark:border-orange-500 shadow-sm'
                         : block.enabled === false
                         ? 'bg-slate-100/40 dark:bg-slate-900/30 border-slate-200 dark:border-slate-800 opacity-50'
                         : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <div
-                        onClick={() => setSelectedBlockId(block.id)}
-                        className="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0"
-                      >
-                        <span className="text-lg">{icon}</span>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-semibold text-xs text-slate-900 dark:text-white truncate">
-                              {block.name || block.type}
-                            </span>
-                            {block.enabled === false && (
-                              <span className="text-[10px] font-bold text-amber-500">
-                                (Hidden)
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
-                            {block.type}
+                    {/* Block Header Row */}
+                    <div
+                      onClick={() => setSelectedBlockId(block.id)}
+                      className="flex items-center gap-3 p-3 cursor-pointer"
+                    >
+                      <span className="text-xl flex-shrink-0">{icon}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                            {block.name || block.type}
                           </span>
+                          {block.enabled === false && (
+                            <span className="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-950/30 px-1.5 py-0.5 rounded-full">
+                              Hidden
+                            </span>
+                          )}
+                          {isSelected && (
+                            <span className="text-[10px] font-bold text-orange-500 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded-full">
+                              Editing
+                            </span>
+                          )}
                         </div>
+                        <p className="text-[11px] text-slate-400 font-medium mt-0.5 truncate">{desc}</p>
                       </div>
+                      <span className="text-[10px] text-slate-300 dark:text-slate-600 font-mono uppercase tracking-wider flex-shrink-0 hidden sm:block">
+                        {block.type}
+                      </span>
+                    </div>
 
-                      {/* Controls */}
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          disabled={index === 0}
-                          onClick={() => reorderPageBlocks(activePageId, index, index - 1)}
-                          className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-20 text-[10px] flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold"
-                          title="Move Up"
-                        >
-                          ↑
-                        </button>
-                        <button
-                          type="button"
-                          disabled={index === currentBlocks.length - 1}
-                          onClick={() => reorderPageBlocks(activePageId, index, index + 1)}
-                          className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-20 text-[10px] flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold"
-                          title="Move Down"
-                        >
-                          ↓
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => toggleBlockVisibility(activePageId, block.id)}
-                          className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-[11px] flex items-center justify-center"
-                          title={block.enabled !== false ? 'Hide' : 'Show'}
-                        >
-                          {block.enabled !== false ? '👁️' : '🙈'}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDuplicateBlock(block)}
-                          className="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-[10px] flex items-center justify-center text-slate-600 dark:text-slate-300"
-                          title="Duplicate"
-                        >
-                          📑
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteBlock(block.id)}
-                          className="w-6 h-6 rounded bg-red-50 dark:bg-red-950/40 hover:bg-red-100 text-red-500 text-[10px] flex items-center justify-center"
-                          title="Delete"
-                        >
-                          ✕
-                        </button>
-                      </div>
+                    {/* Controls Row */}
+                    <div className="flex items-center gap-1 px-3 pb-3 flex-wrap">
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => reorderPageBlocks(activePageId, index, index - 1)}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-20 text-[10px] font-semibold text-slate-600 dark:text-slate-300 transition-all"
+                        title="Move Up"
+                      >
+                        ↑ Up
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === currentBlocks.length - 1}
+                        onClick={() => reorderPageBlocks(activePageId, index, index + 1)}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-20 text-[10px] font-semibold text-slate-600 dark:text-slate-300 transition-all"
+                        title="Move Down"
+                      >
+                        ↓ Down
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleBlockVisibility(activePageId, block.id)}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold transition-all ${
+                          block.enabled !== false
+                            ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+                            : 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 hover:bg-amber-200'
+                        }`}
+                        title={block.enabled !== false ? 'Hide block' : 'Show block'}
+                      >
+                        {block.enabled !== false ? '👁 Hide' : '🙈 Show'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDuplicateBlock(block)}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-[10px] font-semibold text-slate-600 dark:text-slate-300 transition-all"
+                        title="Duplicate block"
+                      >
+                        📑 Copy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteBlock(block.id)}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-50 dark:bg-red-950/40 hover:bg-red-100 text-red-500 text-[10px] font-semibold transition-all"
+                        title="Delete block"
+                      >
+                        🗑 Delete
+                      </button>
                     </div>
                   </div>
                 );
@@ -414,14 +489,15 @@ export const ManagePageBuilder: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsAddModalOpen(true)}
-              className="w-full py-3 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 hover:border-slate-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all"
+              className="w-full py-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-orange-400 dark:hover:border-orange-600 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 font-semibold text-xs flex items-center justify-center gap-2 transition-all group"
             >
-              + Add Component
+              <span className="text-base group-hover:scale-110 transition-transform">➕</span>
+              Add New Block
             </button>
           </div>
 
           {/* Right Column: Inspector */}
-          <div className="lg:col-span-7 sticky top-20">
+          <div className="lg:col-span-7 sticky top-20" ref={inspectorRef}>
             {selectedBlock ? (
               <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
@@ -431,36 +507,35 @@ export const ManagePageBuilder: React.FC = () => {
                       <h3 className="text-sm font-bold text-slate-900 dark:text-white">
                         {selectedBlock.name || selectedBlock.type}
                       </h3>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        {selectedBlock.id}
-                      </span>
+                      <p className="text-[11px] text-slate-400">{BlockTypeDescriptions[selectedBlock.type] || ''}</p>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => setSelectedBlockId(null)}
-                    className="text-xs text-slate-400 hover:text-slate-600 font-semibold"
+                    className="text-xs text-slate-400 hover:text-slate-600 font-semibold px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                   >
                     Close ✕
                   </button>
                 </div>
 
-                <BlockPropertyInspector
+                <BlockPropertyInspectorWithApply
                   block={selectedBlock}
                   onChange={(updated) => {
                     updateSingleBlock(activePageId, updated);
-                    showToast('Saved');
+                    showToast('Changes saved ✓');
                   }}
+                  onSaved={() => showToast('Changes applied successfully ✓')}
                 />
               </div>
             ) : (
-              <div className="p-12 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-2">
-                <div className="text-3xl">👈</div>
-                <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                  Select a section to inspect
+              <div className="p-12 text-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200/80 dark:border-slate-800 space-y-3">
+                <div className="text-4xl">👈</div>
+                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  Select a block to edit
                 </h3>
                 <p className="text-xs text-slate-400 max-w-xs mx-auto">
-                  Click any block on the left to edit its bilingual text, imagery, links, and styling options.
+                  Click any block on the left to edit its content, imagery, links, and visual styling.
                 </p>
               </div>
             )}
@@ -484,7 +559,7 @@ export const ManagePageBuilder: React.FC = () => {
                     : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
-                🖥️ Desktop (100%)
+                🖥️ Desktop
               </button>
               <button
                 type="button"
@@ -511,7 +586,7 @@ export const ManagePageBuilder: React.FC = () => {
             </div>
 
             <span className="text-[11px] text-slate-400 hidden sm:inline">
-              Tip: Click any section in canvas to edit its properties
+              Click a section to open its editor →
             </span>
           </div>
 
@@ -527,47 +602,13 @@ export const ManagePageBuilder: React.FC = () => {
                 onSelectBlock={(blockId) => {
                   setSelectedBlockId(blockId);
                   setActiveTab('editor');
-                  showToast('Opened block inspector');
+                  showToast('Block inspector opened');
+                  // Scroll inspector into view after tab switch
+                  setTimeout(() => inspectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
                 }}
               />
             </div>
           </div>
-        </div>
-      )}
-
-      {/* --- TAB 3: JSON SCHEMA --- */}
-      {activeTab === 'json' && (
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                JSON Layout Schema
-              </h3>
-              <p className="text-xs text-slate-400">
-                Directly export or import the layout configuration for {activePageId}.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleApplyJson}
-              className="px-4 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold rounded-xl"
-            >
-              Apply Schema
-            </button>
-          </div>
-
-          {jsonError && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 text-xs font-semibold border border-red-200 dark:border-red-900">
-              ⚠️ {jsonError}
-            </div>
-          )}
-
-          <textarea
-            rows={18}
-            value={jsonText}
-            onChange={(e) => setJsonText(e.target.value)}
-            className="w-full p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 font-mono text-xs text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-orange-500"
-          />
         </div>
       )}
 

@@ -39,9 +39,11 @@ const AdminDashboard: React.FC = () => {
     navigate('/');
   };
 
+  const lastActivity = adminActivity.length > 0 ? adminActivity[0] : null;
+
   return (
     <div className="space-y-6">
-      {/* Header Banner - Minimal Clean */}
+      {/* Header Banner */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display tracking-tight">
@@ -80,6 +82,17 @@ const AdminDashboard: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Sync Error Alert */}
+      {syncStatus === 'error' && syncError && (
+        <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-2xl">
+          <span className="text-xl flex-shrink-0">⚠️</span>
+          <div>
+            <p className="text-sm font-bold text-red-700 dark:text-red-400">Cloud Sync Error</p>
+            <p className="text-xs text-red-600 dark:text-red-500 mt-0.5">{syncError}</p>
+          </div>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -132,7 +145,6 @@ const AdminDashboard: React.FC = () => {
           onClick={() => navigate('/admin/businesses')}
         />
 
-
         <StatsCard
           icon={
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -147,48 +159,61 @@ const AdminDashboard: React.FC = () => {
         />
       </div>
 
-      {/* Quick Actions and Activity */}
+      {/* Status Panel + Activity Feed */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Quick Actions */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
-          <h2 className="text-sm font-bold text-slate-900 dark:text-white">Quick Portals</h2>
-          <div className="space-y-1.5">
-            <button
-              onClick={() => navigate('/admin/builder')}
-              className="w-full text-left px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200 transition-colors"
-            >
-              <span>🧱 Open Modular Page Builder</span>
-              <span className="text-slate-400">&rarr;</span>
-            </button>
-            <button
-              onClick={() => navigate('/admin/notices')}
-              className="w-full text-left px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200 transition-colors"
-            >
-              <span>📢 Manage Notice Board</span>
-              <span className="text-slate-400">&rarr;</span>
-            </button>
-            <button
-              onClick={() => navigate('/admin/projects')}
-              className="w-full text-left px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200 transition-colors"
-            >
-              <span>🌱 Development Projects & Donors</span>
-              <span className="text-slate-400">&rarr;</span>
-            </button>
-            <button
-              onClick={() => navigate('/admin/emergency')}
-              className="w-full text-left px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200 transition-colors"
-            >
-              <span>🚑 Emergency Directory</span>
-              <span className="text-slate-400">&rarr;</span>
-            </button>
-            <button
-              onClick={() => navigate('/admin/gallery')}
-              className="w-full text-left px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center justify-between text-xs font-semibold text-slate-800 dark:text-slate-200 transition-colors"
-            >
-              <span>📷 Photo Gallery Manager</span>
-              <span className="text-slate-400">&rarr;</span>
-            </button>
+        {/* Live Status Card */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white">Site Status</h2>
+
+          {/* Live Stream Status */}
+          <div className={`flex items-center justify-between p-3 rounded-xl border ${liveActive ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900' : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'}`}>
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${liveActive ? 'bg-red-500 animate-pulse' : 'bg-slate-300 dark:bg-slate-600'}`} />
+              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Live Stream</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {liveActive
+                ? <span className="text-[11px] font-black text-red-600 dark:text-red-400 uppercase tracking-wider">● ON AIR</span>
+                : <span className="text-[11px] text-slate-400">Offline</span>
+              }
+              <button onClick={() => navigate('/admin/live')} className="text-[11px] font-semibold text-orange-500 hover:underline">
+                Manage →
+              </button>
+            </div>
           </div>
+
+          {/* Sync Status */}
+          <div className={`flex items-center justify-between p-3 rounded-xl border ${syncStatus === 'error' ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900' : syncStatus === 'syncing' ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900' : 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900'}`}>
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${syncStatus === 'ok' ? 'bg-emerald-500' : syncStatus === 'syncing' ? 'bg-amber-500 animate-pulse' : 'bg-red-500'}`} />
+              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Cloud Sync</span>
+            </div>
+            <span className={`text-[11px] font-bold uppercase tracking-wider ${syncStatus === 'ok' ? 'text-emerald-600 dark:text-emerald-400' : syncStatus === 'syncing' ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
+              {syncStatus === 'ok' ? 'Online' : syncStatus === 'syncing' ? 'Syncing…' : 'Error'}
+            </span>
+          </div>
+
+          {/* Content Summary */}
+          <div className="flex items-center justify-between px-1 text-xs text-slate-400">
+            <span>{totalContentItems} total items</span>
+            {unreadMessages > 0 && (
+              <button onClick={() => navigate('/admin/messages')} className="text-amber-500 font-semibold hover:underline">
+                {unreadMessages} unread msg{unreadMessages > 1 ? 's' : ''}
+              </button>
+            )}
+          </div>
+
+          {/* Last Activity */}
+          {lastActivity && (
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-0.5">
+              <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Last Action</p>
+              <p className="font-semibold text-slate-900 dark:text-white">{lastActivity.action}</p>
+              <p className="text-slate-500">{lastActivity.detail}</p>
+              <p className="text-slate-400 font-mono text-[10px]">
+                {new Date(lastActivity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Activity Feed */}
@@ -227,4 +252,3 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
-
